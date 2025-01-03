@@ -36,7 +36,6 @@ export function useFetchPosts({
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
-      console.log(countryID);
       try {
         const params: string[] = [];
         if (page) {
@@ -55,7 +54,6 @@ export function useFetchPosts({
           params.push(`country_ids=${countryID}`);
         }
         const urlparams = params.length > 0 ? `?${params.join('&')}` : '';
-        console.log(`${config.apiUrl}/posts` + urlparams);
         const res = await fetch(`${config.apiUrl}/posts` + urlparams);
         if (!res.ok) {
           throw new Error('Failed to fetch posts');

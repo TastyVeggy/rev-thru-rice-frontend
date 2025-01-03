@@ -95,25 +95,19 @@ export const signup = createAsyncThunk(
 );
 
 export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
-  const token = Cookies.get('token');
+  const res = await fetch(`${config.apiUrl}/auth/verify_token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Authorization: `Bearer ${token}`,
+    },
+    credentials: 'include',
+  });
 
-  if (token) {
-    const res = await fetch(`${config.apiUrl}/auth/verify_token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include',
-    });
-
-    if (!res.ok) {
-      throw new Error('Not authenticated');
-    }
-    return (await res.json()) as User;
-  } else {
+  if (!res.ok) {
     throw new Error('Not authenticated');
   }
+  return (await res.json()) as User;
 });
 
 export const logout = createAsyncThunk('auth/logout', async () => {
