@@ -1,0 +1,5 @@
+VITE_APP_ENV=development  # development or production
+VITE_DEV_BACKEND_API_URL=http://localhost:8080
+# VITE_PROD_BACKEND_API_URL
+VITE_COUNTY_CODE_JSON_PATH=/country-codes.json
+VITE_LOGO_URL=/logo.png
