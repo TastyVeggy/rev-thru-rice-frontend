@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
-import { ChevronDown } from 'lucide-react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 interface HeaderMenuProps {
   anchorEl: null | HTMLElement;
   label: string;
@@ -33,7 +33,8 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({
         <Typography variant='h5' sx={{ fontWeight: 500 }}>
           {label}
         </Typography>
-        <ChevronDown size={20} />
+        <ExpandMoreIcon />
+        {/* <ChevronDown size={20} /> */}
       </Button>
       <Menu
         id={`${label}-menu`}

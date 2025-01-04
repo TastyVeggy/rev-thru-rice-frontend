@@ -1,8 +1,8 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../features/store';
+import { AppDispatch, RootState } from '../../features/store';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../features/slices/authSlice';
+import { logout } from '../../features/slices/authSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SportsMotorsportsIcon from '@mui/icons-material/SportsMotorsports';
@@ -19,9 +19,9 @@ import {
   Typography,
 } from '@mui/material';
 import HeaderMenu from './Submenu';
-import { fetchSubforums } from '../features/slices/subforumsSlice';
-import { fetchCountries } from '../features/slices/countriesSlice';
-import { config } from '../config';
+import { fetchSubforums } from '../../features/slices/subforumsSlice';
+import { fetchCountries } from '../../features/slices/countriesSlice';
+import { config } from '../../config';
 
 export function Header() {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);

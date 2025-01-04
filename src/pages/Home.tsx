@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../features/store';
 import { useEffect } from 'react';
 import { fetchCountries } from '../features/slices/countriesSlice';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFetchSubforumsWithPostCountByCountry } from '../hooks/useFetchSubforumsWithPostCounts';
-import { Layout } from '../components/Layout';
+import { Layout } from '../components/layout/Layout';
 import {
   Box,
   Button,
@@ -13,13 +13,14 @@ import {
   Grid2,
   Typography,
 } from '@mui/material';
-import { SubforumCard } from '../components/SubforumCard';
-import { FlagIcon } from '../components/FlagIcon';
-import { RecentPosts } from '../components/RecentPosts';
+import { SubforumCard } from '../components/cards/SubforumCard';
+import { FlagIcon } from '../components/atoms/FlagIcon';
+import { RecentPosts } from '../components/cards/RecentPostsCard';
 import { useFetchPosts } from '../hooks/useFetchPosts';
 
-export default function Home() {
+export default function HomePage() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { items: countries, status: countriesStatus } = useSelector(
     (state: RootState) => state.countries
   );
@@ -28,6 +29,14 @@ export default function Home() {
   const { subforumsWithPostCount } =
     useFetchSubforumsWithPostCountByCountry(countryID);
   const { posts } = useFetchPosts({ limit: 5, countryID: countryID });
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const handleNewContentClick = (content_type: string) => {
+    if (isAuthenticated) {
+      navigate(`/${content_type}`);
+    } else {
+      navigate(`/login`);
+    }
+  };
 
   useEffect(() => {
     if (countriesStatus === 'idle') {
@@ -122,7 +131,7 @@ export default function Home() {
               variant='contained'
               color='primary'
               sx={{ mr: 1 }}
-              href='/new_post'
+              onClick={() => handleNewContentClick('new_post')}
             >
               <Typography sx={{ fontWeight: '550' }}>New Post</Typography>
             </Button>
@@ -130,7 +139,7 @@ export default function Home() {
               variant='contained'
               color='secondary'
               sx={{ mr: 1 }}
-              href='/new_review'
+              onClick={() => handleNewContentClick('new_review')}
             >
               <Typography sx={{ fontWeight: '550' }}>New Review</Typography>
             </Button>

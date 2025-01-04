@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { config } from './../../config';
-import Cookies from 'js-cookie';
 interface User {
   id: number;
   username: string;

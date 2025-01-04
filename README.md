@@ -2,6 +2,8 @@
 
 Rev Thru Rice is a forum designed for traveller in Southeast Asia who enjoy exploring and sharing their experience in this beautiful region on two wheels.
 
+Still in preliminary development stage
+
 
 
 ## Usage

@@ -1,15 +1,17 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { checkAuth } from './features/slices/authSlice';
 import { AppDispatch } from './features/store';
 import SignupPage from './pages/Signup';
+import NewPostPage from './pages/NewPost';
+import './components/map/geocode.css';
+import NewReviewPage from './pages/NewReview';
 
 function App() {
   // Cannot seem to get the jwt-token cookie to not get destroyed upon page refresh so I guess this is useless for now
-  console.log(import.meta.env.VITE_LOGO_URL);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(checkAuth());
@@ -17,9 +19,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
+      <Route path='/new_post' element={<NewPostPage />} />
+      <Route path='/new_review' element={<NewReviewPage />} />
     </Routes>
   );
 }

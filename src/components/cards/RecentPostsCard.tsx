@@ -1,5 +1,5 @@
 import React from 'react';
-import { Post } from '../hooks/useFetchPosts';
+import { Post } from '../../hooks/useFetchPosts';
 import {
   Card,
   CardContent,
@@ -29,7 +29,6 @@ export const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
         sx={{
           paddingBottom: 0,
         }}
-        // avatar={<MessageSquare color='secondary' />}
         title='Recent Discussions'
       ></CardHeader>
       <CardContent

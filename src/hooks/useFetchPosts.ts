@@ -10,10 +10,10 @@ export interface Post {
   content: string;
   comment_count: number;
   created_at: string;
-  coutries: string[];
+  countries: string[];
 }
 
-interface fetchPostsArgs {
+interface FetchPostsArgs {
   page?: number | null;
   limit?: number | null;
   subforumID?: number | null;
@@ -27,7 +27,7 @@ export function useFetchPosts({
   subforumID = null,
   userID = null,
   countryID = null,
-}: fetchPostsArgs) {
+}: FetchPostsArgs) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
