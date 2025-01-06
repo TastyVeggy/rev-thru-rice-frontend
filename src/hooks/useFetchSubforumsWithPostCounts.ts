@@ -34,7 +34,6 @@ export function useFetchSubforumsWithPostCountByCountry(
           throw new Error('Failed to fetch subforums with post count');
         }
         const data = await res.json();
-        console.log(data);
         setSubforumsWithPostCount(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');

@@ -130,7 +130,6 @@ export const Map: React.FC<MapProps> = ({ allowedCountries, onSubmit }) => {
     if (position) {
       if (!allowedCountries || allowedCountries.includes(country)) {
         const [lat, lng] = position;
-        console.log(country);
         onSubmit(lat, lng, country, address);
       } else {
         alert(

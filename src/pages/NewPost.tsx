@@ -67,7 +67,6 @@ export default function NewPostPage() {
       target: { value },
     } = event;
     setCountriesSelected(typeof value === 'string' ? value.split(',') : value);
-    console.log(countriesSelected);
   };
 
   return (

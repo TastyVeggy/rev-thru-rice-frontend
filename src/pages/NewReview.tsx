@@ -91,11 +91,9 @@ export default function NewReviewPage() {
           reviewReq,
           subforumSelected
         );
-        console.log(newReview);
         navigate(`/reviews/${newReview.shop.id}`);
       }
     } catch (error) {
-      console.log(error);
       navigate('/');
     }
   };
@@ -119,7 +117,6 @@ export default function NewReviewPage() {
       lat: newLat,
       lng: newLng,
     });
-    console.log(newCountry);
     setShopCountry(newCountry);
     setShopAddress(newAddress);
     setIsLocationPicked(true);

@@ -4,7 +4,7 @@ Rev Thru Rice is a forum designed for traveller in Southeast Asia who enjoy expl
 
 Still in preliminary development stage
 
-
+Note: Logo is adapted from Google Gemini. Code snippets adapted/taken from ChatGPT are attributed.
 
 ## Usage
 

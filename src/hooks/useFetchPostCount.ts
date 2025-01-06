@@ -1,49 +1,27 @@
 import { useEffect, useState } from 'react';
 import { config } from '../config';
 
-export interface Post {
-  id: number;
-  subforum_id: number;
-  user_id: number;
-  username: string;
-  title: string;
-  content: string;
-  comment_count: number;
-  created_at: string;
-  countries: string[];
-}
-
-interface FetchPostsArgs {
-  page?: number | null;
-  limit?: number | null;
+interface FetchPostCountArgs {
   subforumID?: number | null;
   userID?: number | null;
-  countryID?: number | null; //can be changed to countryIDs, if have more advanced search function in the future
+  countryID?: number | null;
 }
 
-export function useFetchPosts({
-  page = null,
-  limit = null,
+export function useFetchPostCount({
   subforumID = null,
   userID = null,
   countryID = null,
-}: FetchPostsArgs) {
-  const [posts, setPosts] = useState<Post[]>([]);
+}: FetchPostCountArgs) {
+  const [postCount, setPostCount] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPostCount = async () => {
       setLoading(true);
       setError(null);
       try {
         const params: string[] = [];
-        if (page) {
-          params.push(`page=${page}`);
-        }
-        if (limit) {
-          params.push(`limit=${limit}`);
-        }
         if (subforumID) {
           params.push(`subforum_id=${subforumID}`);
         }
@@ -54,11 +32,11 @@ export function useFetchPosts({
           params.push(`country_ids=${countryID}`);
         }
         const urlparams = params.length > 0 ? `?${params.join('&')}` : '';
-        const res = await fetch(`${config.apiUrl}/posts` + urlparams);
+        const res = await fetch(`${config.apiUrl}/posts/count` + urlparams);
         if (!res.ok) {
           throw new Error('Failed to fetch posts');
         }
-        setPosts(await res.json());
+        setPostCount(await res.json());
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -66,8 +44,8 @@ export function useFetchPosts({
       }
     };
 
-    fetchPosts();
-  }, [countryID, page, limit]);
+    fetchPostCount();
+  }, [countryID]);
 
-  return { posts, loading, error };
+  return { postCount, loading, error };
 }

@@ -30,8 +30,6 @@ export const createReviewService = async (
     }
   );
   if (!res.ok) {
-    const error = await res.text();
-    console.log(error);
     throw new Error('unable to create review');
   }
   const data = await res.json();

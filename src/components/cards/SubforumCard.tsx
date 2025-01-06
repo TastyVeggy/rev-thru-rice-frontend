@@ -69,7 +69,7 @@ export const SubforumCard: React.FC<SubforumCardProps> = ({
       >
         <img
           src={image}
-          alt={`${name} image`}
+          alt={`${title} image`}
           style={{
             position: 'absolute',
             top: '0',

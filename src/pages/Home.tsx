@@ -28,7 +28,10 @@ export default function HomePage() {
   const countryID = queryParams.get('country_id');
   const { subforumsWithPostCount } =
     useFetchSubforumsWithPostCountByCountry(countryID);
-  const { posts } = useFetchPosts({ limit: 5, countryID: countryID });
+  const { posts } = useFetchPosts({
+    limit: 5,
+    countryID: countryID === null ? null : Number(countryID),
+  });
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const handleNewContentClick = (content_type: string) => {
     if (isAuthenticated) {
@@ -133,7 +136,7 @@ export default function HomePage() {
               sx={{ mr: 1 }}
               onClick={() => handleNewContentClick('new_post')}
             >
-              <Typography sx={{ fontWeight: '550' }}>New Post</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>New Post</Typography>
             </Button>
             <Button
               variant='contained'
@@ -141,7 +144,7 @@ export default function HomePage() {
               sx={{ mr: 1 }}
               onClick={() => handleNewContentClick('new_review')}
             >
-              <Typography sx={{ fontWeight: '550' }}>New Review</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>New Review</Typography>
             </Button>
           </Box>
           <RecentPosts posts={posts} />
