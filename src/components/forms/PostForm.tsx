@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from '@mui/material';
-import { Layout } from '../layout/Layout';
 
 interface PostFormProps {
   category: 'Review' | 'Post';
@@ -13,23 +12,21 @@ export const PostForm: React.FC<PostFormProps> = ({
   children,
 }) => {
   return (
-    <Layout>
-      <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
-        <Typography variant='h4' component='h1' gutterBottom>
-          Create New {category}
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          {children}
-          <Button
-            type='submit'
-            variant='contained'
-            color='primary'
-            sx={{ mt: 2 }}
-          >
-            Share with the world!
-          </Button>
-        </form>
+    <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
+      <Typography variant='h4' component='h1' gutterBottom>
+        Create New {category}
+      </Typography>
+      <Box component='form' onSubmit={handleSubmit}>
+        {children}
+        <Button
+          type='submit'
+          variant='contained'
+          color='primary'
+          sx={{ mt: 2 }}
+        >
+          Share with the world!
+        </Button>
       </Box>
-    </Layout>
+    </Box>
   );
 };

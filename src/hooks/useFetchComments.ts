@@ -1,28 +1,26 @@
 import { useEffect, useState } from 'react';
 import { config } from '../config';
-import { Post } from '../interfaces/post';
+import { Comment } from '../interfaces/comment';
 
-interface FetchPostsArgs {
-  page?: number | null;
+interface FetchCommentsArgs {
   limit?: number | null;
-  subforumID?: number | null;
+  page?: number | null;
+  postID?: number | null;
   userID?: number | null;
-  countryID?: number | null; //can be changed to countryIDs, if have more advanced search function in the future
 }
 
-export function useFetchPosts({
-  page = null,
+export function useFetchComments({
   limit = null,
-  subforumID = null,
+  page = null,
+  postID = null,
   userID = null,
-  countryID = null,
-}: FetchPostsArgs) {
-  const [posts, setPosts] = useState<Post[]>([]);
+}: FetchCommentsArgs) {
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchComments = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -33,30 +31,26 @@ export function useFetchPosts({
         if (limit) {
           params.push(`limit=${limit}`);
         }
-        if (subforumID) {
-          params.push(`subforum_id=${subforumID}`);
+        if (postID) {
+          params.push(`post_id=${postID}`);
         }
         if (userID) {
           params.push(`user_id=${userID}`);
         }
-        if (countryID) {
-          params.push(`country_ids=${countryID}`);
-        }
         const urlparams = params.length > 0 ? `?${params.join('&')}` : '';
-        const res = await fetch(`${config.apiUrl}/posts` + urlparams);
+        const res = await fetch(`${config.apiUrl}/comments${urlparams}`);
         if (!res.ok) {
-          throw new Error('Failed to fetch posts');
+          throw new Error('Failed to fetch comments');
         }
-        setPosts(await res.json());
+        setComments(await res.json());
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
     };
+    fetchComments();
+  }, [page]);
 
-    fetchPosts();
-  }, [countryID, page]);
-
-  return { posts, loading, error };
+  return { comments, loading, error };
 }

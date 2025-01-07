@@ -1,4 +1,4 @@
-import { Post } from './useFetchPosts';
+import { Post, PostReq } from './post';
 
 export interface Rating {
   score: number;
@@ -22,4 +22,16 @@ export interface Review {
   post: Post;
   shop: Shop;
   rating: Rating;
+}
+
+export interface ReviewReq {
+  post: PostReq;
+  shop: {
+    name: string;
+    lat: number;
+    lng: number;
+    address: string | null;
+    country: string;
+  };
+  rating: { score: number };
 }

@@ -9,7 +9,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { formatDistanceToNow } from 'date-fns';
+import { timeAgo } from '../../utils/time';
 
 interface RecentPostsProps {
   posts: Post[];
@@ -56,9 +56,7 @@ export const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
                 }
                 secondary={`by ${post.username} • ${
                   post.comment_count
-                } comments • ${formatDistanceToNow(
-                  new Date(post.created_at)
-                )} ago`}
+                } comments • ${timeAgo(post.created_at)}`}
               />
             </ListItem>
           ))}

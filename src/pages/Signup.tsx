@@ -5,6 +5,7 @@ import { AppDispatch } from '../features/store';
 import { signup } from '../features/slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserForm } from '../components/forms/UserForm';
+import { Layout } from '../components/layout/Layout';
 
 export default function SignupPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -77,73 +78,76 @@ export default function SignupPage() {
     }
   };
   return (
-    <UserForm
-      formName='Signup'
-      handleSubmit={handleSubmit}
-      redirect={{ message: 'Have an account?', route: '/login' }}
-    >
-      {errorMessages.length > 0 && (
-        <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
-          <List>
-            {errorMessages.map((message, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={message} />
-              </ListItem>
-            ))}
-          </List>
-        </Alert>
-      )}
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='username'
-        label='Username'
-        name='username'
-        autoComplete='username'
-        autoFocus
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        error={!!usernameFieldError}
-      />
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='email'
-        label='Email'
-        name='email'
-        autoComplete='email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        error={!!emailFieldError}
-      />
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='password'
-        label='Password'
-        name='password'
-        type='password'
-        autoComplete='current-password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        error={errorMessages.length > 0}
-      />
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='confirm_password'
-        label='Confirm Password'
-        name='confirm_password'
-        type='password'
-        autoComplete='confirm-password'
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        error={errorMessages.length > 0}
-      />
-    </UserForm>
+    <Layout withBackground>
+      <UserForm
+        formName='Signup'
+        handleSubmit={handleSubmit}
+        redirect={{ message: 'Have an account?', route: '/login' }}
+        prevPage={prevPage}
+      >
+        {errorMessages.length > 0 && (
+          <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
+            <List>
+              {errorMessages.map((message, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={message} />
+                </ListItem>
+              ))}
+            </List>
+          </Alert>
+        )}
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='username'
+          label='Username'
+          name='username'
+          autoComplete='username'
+          autoFocus
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          error={!!usernameFieldError}
+        />
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='email'
+          label='Email'
+          name='email'
+          autoComplete='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          error={!!emailFieldError}
+        />
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='password'
+          label='Password'
+          name='password'
+          type='password'
+          autoComplete='current-password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          error={errorMessages.length > 0}
+        />
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='confirm_password'
+          label='Confirm Password'
+          name='confirm_password'
+          type='password'
+          autoComplete='confirm-password'
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          error={errorMessages.length > 0}
+        />
+      </UserForm>
+    </Layout>
   );
 }

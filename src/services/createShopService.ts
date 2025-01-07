@@ -1,18 +1,5 @@
 import { config } from '../config';
-import { Review } from '../hooks/useFetchReviews';
-import { PostReq } from './createPostService';
-
-export interface ReviewReq {
-  post: PostReq;
-  shop: {
-    name: string;
-    lat: number;
-    lng: number;
-    address: string | null;
-    country: string;
-  };
-  rating: { score: number };
-}
+import { Review, ReviewReq } from '../interfaces/review';
 
 export const createReviewService = async (
   review: ReviewReq,

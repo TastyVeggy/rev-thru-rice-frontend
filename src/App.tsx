@@ -10,6 +10,7 @@ import NewPostPage from './pages/NewPost';
 import './components/map/geocode.css';
 import NewReviewPage from './pages/NewReview';
 import SubforumPage from './pages/Subforum';
+import PostPage from './pages/Post';
 
 function App() {
   // Cannot seem to get the jwt-token cookie to not get destroyed upon page refresh so I guess this is useless for now
@@ -26,6 +27,7 @@ function App() {
       <Route path='/new_post' element={<NewPostPage />} />
       <Route path='/new_review' element={<NewReviewPage />} />
       <Route path='/subforums/:id' element={<SubforumPage />} />
+      <Route path='/posts/:id' element={<PostPage />} />
     </Routes>
   );
 }

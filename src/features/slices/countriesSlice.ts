@@ -1,12 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { config } from '../../config';
-
-export interface Country {
-  id: number;
-  name: string;
-  description: string;
-  code: string;
-}
+import { Country } from '../../interfaces/country';
 
 interface CountryRes {
   id: number;

@@ -9,8 +9,10 @@ import { fetchCountries } from '../features/slices/countriesSlice';
 import { fetchSubforums } from '../features/slices/subforumsSlice';
 import { PostCard } from '../components/cards/PostCard';
 import { useFetchPostCount } from '../hooks/useFetchPostCount';
+import { Subforum } from '../interfaces/subforum';
 
 export default function SubforumPage() {
+  const postsPerPage = 8;
   const { id: subforumIDString } = useParams();
   const subforumID = Number(subforumIDString);
   const navigate = useNavigate();
@@ -28,7 +30,6 @@ export default function SubforumPage() {
   );
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [page, setPage] = useState(1);
-  const postsPerPage = 8;
   const { posts } = useFetchPosts({
     page,
     subforumID,
@@ -40,6 +41,10 @@ export default function SubforumPage() {
     countryID,
   });
 
+  const currentSubforum: Subforum | undefined = subforums.find(
+    (subforum) => subforum.id === subforumID
+  );
+
   useEffect(() => {
     if (countriesStatus === 'idle') {
       dispatch(fetchCountries());
@@ -47,13 +52,17 @@ export default function SubforumPage() {
     if (subforumsStatus === 'idle') {
       dispatch(fetchSubforums());
     }
-  });
+  }, [countriesStatus, subforumsStatus, dispatch]);
 
-  const handleNewPostClick = () => {
+  const handleClickNew = () => {
     if (isAuthenticated) {
-      navigate('/new_post');
+      if (currentSubforum?.category === 'Review') {
+        navigate('/new_review');
+      } else {
+        navigate('/new_post');
+      }
     } else {
-      navigate('/login');
+      navigate('/login', { state: { from: location.pathname } });
     }
   };
 
@@ -67,9 +76,22 @@ export default function SubforumPage() {
 
   return (
     <Layout>
-      <Typography variant='h4' component='h1' gutterBottom>
-        {subforums.find((subforum) => subforum.id === subforumID)?.name}
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant='h4' component='h1' gutterBottom>
+          {currentSubforum?.name}
+        </Typography>
+        <Button variant='contained' onClick={handleClickNew} color='secondary'>
+          <Typography fontWeight='bold'>
+            {currentSubforum?.category === 'Review' ? 'New Review' : 'New Post'}
+          </Typography>
+        </Button>
+      </Box>
       <Box maxWidth='lg'>
         {posts ? (
           posts.map((post) => (
@@ -100,7 +122,7 @@ export default function SubforumPage() {
             <Button
               variant='contained'
               color='primary'
-              onClick={handleNewPostClick}
+              onClick={handleClickNew}
             >
               So make one!
             </Button>

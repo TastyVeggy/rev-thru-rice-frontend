@@ -1,13 +1,6 @@
+import { Subforum } from './../../interfaces/subforum';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { config } from '../../config';
-
-export interface Subforum {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  image: string;
-}
 
 interface SubforumsState {
   items: Subforum[];

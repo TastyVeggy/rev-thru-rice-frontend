@@ -5,6 +5,7 @@ import { AppDispatch } from '../features/store';
 import { login } from '../features/slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserForm } from '../components/forms/UserForm';
+import { Layout } from '../components/layout/Layout';
 
 export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,42 +27,45 @@ export default function LoginPage() {
     }
   };
   return (
-    <UserForm
-      formName='Login'
-      handleSubmit={handleSubmit}
-      redirect={{ message: "Don't have an account?", route: '/signup' }}
-    >
-      {authError && (
-        <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
-          {authError}
-        </Alert>
-      )}
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='username'
-        label='Username'
-        name='username'
-        autoComplete='username'
-        autoFocus
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        error={!!authError}
-      />
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='password'
-        label='Password'
-        name='password'
-        type='password'
-        autoComplete='current-password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        error={!!authError}
-      />
-    </UserForm>
+    <Layout withBackground>
+      <UserForm
+        formName='Login'
+        handleSubmit={handleSubmit}
+        redirect={{ message: "Don't have an account?", route: '/signup' }}
+        prevPage={prevPage}
+      >
+        {authError && (
+          <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
+            {authError}
+          </Alert>
+        )}
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='username'
+          label='Username'
+          name='username'
+          autoComplete='username'
+          autoFocus
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          error={!!authError}
+        />
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='password'
+          label='Password'
+          name='password'
+          type='password'
+          autoComplete='current-password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          error={!!authError}
+        />
+      </UserForm>
+    </Layout>
   );
 }

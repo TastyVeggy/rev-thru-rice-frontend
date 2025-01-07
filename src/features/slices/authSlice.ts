@@ -1,10 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { config } from './../../config';
-interface User {
-  id: number;
-  username: string;
-  email: string;
-}
+import { User } from '../../interfaces/user';
 
 interface AuthState {
   user: User | null;

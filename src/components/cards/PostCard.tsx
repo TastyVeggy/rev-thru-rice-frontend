@@ -9,9 +9,9 @@ import {
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { darkenColorRGB } from '../../utils/rgb';
-import { Country } from '../../features/slices/countriesSlice';
-import { formatDistanceToNow } from 'date-fns';
 import CommentIcon from '@mui/icons-material/Comment';
+import { timeAgo } from '../../utils/time';
+import { Country } from '../../interfaces/country';
 
 interface PostCardProps {
   id: number;
@@ -31,6 +31,8 @@ export const PostCard: React.FC<PostCardProps> = ({
   createdAt,
 }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const hoveredColor = darkenColorRGB(theme.palette.background.paper);
   const handlePostClick = () => {
     navigate(`/posts/${id}`);
   };
@@ -38,8 +40,6 @@ export const PostCard: React.FC<PostCardProps> = ({
     e.stopPropagation();
     navigate(`/?country_id=${countryID}`);
   };
-  const theme = useTheme();
-  const hoveredColor = darkenColorRGB(theme.palette.background.paper);
   return (
     <Card
       sx={{
@@ -88,7 +88,7 @@ export const PostCard: React.FC<PostCardProps> = ({
           {content.length < 100 ? content : `${content.substring(0, 100)}...`}
         </Typography> */}
         <Typography variant='body2' color='text.secondary'>
-          {`by ${username} • ${formatDistanceToNow(new Date(createdAt))} ago`}
+          {`by ${username} • ${timeAgo(createdAt)}`}
         </Typography>
       </Box>
     </Card>

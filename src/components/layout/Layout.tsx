@@ -36,7 +36,21 @@ export const Layout: React.FC<LayoutProps> = ({
       <Box sx={{ minHeight: '100vh', bdcolor: 'background.default' }}>
         <Header />
         {withBackground ? (
-          children
+          <Box
+            sx={{
+              width: '100%',
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundImage: 'url("/aesthetic-background.jpg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {children}
+          </Box>
         ) : (
           <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
             {' '}

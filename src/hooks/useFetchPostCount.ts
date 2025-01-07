@@ -34,6 +34,7 @@ export function useFetchPostCount({
         const urlparams = params.length > 0 ? `?${params.join('&')}` : '';
         const res = await fetch(`${config.apiUrl}/posts/count` + urlparams);
         if (!res.ok) {
+          console.warn(await res.text());
           throw new Error('Failed to fetch posts');
         }
         setPostCount(await res.json());

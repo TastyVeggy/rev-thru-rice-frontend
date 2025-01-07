@@ -1,11 +1,5 @@
 import { config } from '../config';
-import { Post } from '../hooks/useFetchPosts';
-
-export interface PostReq {
-  title: string;
-  content: string;
-  countries: string[];
-}
+import { Post, PostReq } from '../interfaces/post';
 
 export const createPostService = async (post: PostReq, subforum_id: string) => {
   const res = await fetch(
@@ -20,6 +14,7 @@ export const createPostService = async (post: PostReq, subforum_id: string) => {
     }
   );
   if (!res.ok) {
+    console.warn(await res.text());
     throw new Error('unable to create post');
   }
   const data = await res.json();

@@ -25,8 +25,10 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { PostForm } from '../components/forms/PostForm';
 import 'flag-icons/css/flag-icons.min.css';
-import { createReviewService, ReviewReq } from '../services/createShopService';
+import { createReviewService } from '../services/createShopService';
 import Map from '../components/map/Map';
+import { ReviewReq } from '../interfaces/review';
+import { Layout } from '../components/layout/Layout';
 
 export default function NewReviewPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,6 +39,7 @@ export default function NewReviewPage() {
   const { items: countries, status: countriesStatus } = useSelector(
     (state: RootState) => state.countries
   );
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -61,6 +64,12 @@ export default function NewReviewPage() {
       dispatch(fetchCountries());
     }
   }, [dispatch, subforumsStatus, countriesStatus]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: location.pathname } });
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,149 +142,155 @@ export default function NewReviewPage() {
   }));
 
   return (
-    <PostForm category='Review' handleSubmit={handleSubmit}>
-      {formError && (
-        <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
-          {formError}
-        </Alert>
-      )}
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='title'
-        name='title'
-        label='Review Title'
-        autoFocus
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <FormControl fullWidth margin='normal' required>
-        <InputLabel id='subforum-select-label'>Subforum</InputLabel>
-        <Select
-          labelId='subforum-select-label'
-          id='subforum-select'
-          value={subforumSelected}
-          label='Subforum'
-          onChange={handleSubforumChange}
-        >
-          {subforums
-            .filter((subforum) => subforum.category === 'Review')
-            .map((subforum) => (
-              <MenuItem key={subforum.id} value={subforum.id}>
-                {subforum.name}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
-      <Typography variant='h5' sx={{ mt: 6 }}>
-        Shop Details
-      </Typography>
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='name'
-        name='name'
-        label='Name of the Shop'
-        value={shopName}
-        sx={{ mb: 3 }}
-        onChange={(e) => setShopName(e.target.value)}
-      />
-      <TextField
-        required
-        fullWidth
-        disabled={!isLocationPicked}
-        id='name'
-        name='name'
-        label='Address of the Shop'
-        value={shopAddress}
-        onChange={(e) => setShopName(e.target.value)}
-        helperText={
-          isLocationPicked
-            ? 'Edit if necessary'
-            : 'Select location on map first, edit after if necessary'
-        }
-      />
-      <TextField
-        required
-        fullWidth
-        disabled
-        id='name'
-        name='name'
-        label='Country of the Shop'
-        sx={{ mt: 1 }}
-        value={shopCountry}
-        onChange={(e) => setShopName(e.target.value)}
-        helperText='Determined by the location on map you pick'
-      />
-      <Button
-        variant='contained'
-        color='secondary'
-        sx={{ mt: 1 }}
-        onClick={handleClickOpenMap}
-      >
-        Select shop location
-      </Button>
-      <BootstrapDialog
-        onClose={handleCloseMap}
-        aria-labelledby='map-dialog'
-        open={openMap}
-        maxWidth='lg'
-        fullWidth
-      >
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingLeft: '16px',
-          }}
-        >
-          <Typography variant='h5' component='span' sx={{ fontWeight: 'bold' }}>
-            Select your shop location
-          </Typography>
-          <IconButton edge='end' color='primary' onClick={handleCloseMap}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Typography color='#FF0000' sx={{ mb: 2 }}>
-            Note: Even though using the search function will add a marker, you
-            yourself will have to click a point on the map before submitting
-            location
-          </Typography>
-          <Map
-            allowedCountries={countries.map((country) => country.name)}
-            onSubmit={handleMapSubmit}
-          />
-        </DialogContent>
-      </BootstrapDialog>
-      <TextField
-        margin='normal'
-        required
-        fullWidth
-        id='content'
-        name='content'
-        label='Review Content'
-        multiline
-        rows={5}
-        value={content}
-        sx={{
-          mt: 8,
-        }}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <Box>
-        <Typography variant='h6'> Final Rating</Typography>
-        <Rating
-          name='rating'
-          value={rating}
-          onChange={(_, newRating) => {
-            setRating(newRating ?? 0);
-          }}
+    <Layout>
+      <PostForm category='Review' handleSubmit={handleSubmit}>
+        {formError && (
+          <Alert severity='error' sx={{ width: '100%', md: 2, mt: 2 }}>
+            {formError}
+          </Alert>
+        )}
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='title'
+          name='title'
+          label='Review Title'
+          autoFocus
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-      </Box>
-    </PostForm>
+        <FormControl fullWidth margin='normal' required>
+          <InputLabel id='subforum-select-label'>Subforum</InputLabel>
+          <Select
+            labelId='subforum-select-label'
+            id='subforum-select'
+            value={subforumSelected}
+            label='Subforum'
+            onChange={handleSubforumChange}
+          >
+            {subforums
+              .filter((subforum) => subforum.category === 'Review')
+              .map((subforum) => (
+                <MenuItem key={subforum.id} value={subforum.id}>
+                  {subforum.name}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+        <Typography variant='h5' sx={{ mt: 6 }}>
+          Shop Details
+        </Typography>
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='name'
+          name='name'
+          label='Name of the Shop'
+          value={shopName}
+          sx={{ mb: 3 }}
+          onChange={(e) => setShopName(e.target.value)}
+        />
+        <TextField
+          required
+          fullWidth
+          disabled={!isLocationPicked}
+          id='name'
+          name='name'
+          label='Address of the Shop'
+          value={shopAddress}
+          onChange={(e) => setShopName(e.target.value)}
+          helperText={
+            isLocationPicked
+              ? 'Edit if necessary'
+              : 'Select location on map first, edit after if necessary'
+          }
+        />
+        <TextField
+          required
+          fullWidth
+          disabled
+          id='name'
+          name='name'
+          label='Country of the Shop'
+          sx={{ mt: 1 }}
+          value={shopCountry}
+          onChange={(e) => setShopName(e.target.value)}
+          helperText='Determined by the location on map you pick'
+        />
+        <Button
+          variant='contained'
+          color='secondary'
+          sx={{ mt: 1 }}
+          onClick={handleClickOpenMap}
+        >
+          Select shop location
+        </Button>
+        <BootstrapDialog
+          onClose={handleCloseMap}
+          aria-labelledby='map-dialog'
+          open={openMap}
+          maxWidth='lg'
+          fullWidth
+        >
+          <DialogTitle
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingLeft: '16px',
+            }}
+          >
+            <Typography
+              variant='h5'
+              component='span'
+              sx={{ fontWeight: 'bold' }}
+            >
+              Select your shop location
+            </Typography>
+            <IconButton edge='end' color='primary' onClick={handleCloseMap}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <Typography color='#FF0000' sx={{ mb: 2 }}>
+              Note: Even though using the search function will add a marker, you
+              yourself will have to click a point on the map before submitting
+              location
+            </Typography>
+            <Map
+              allowedCountries={countries.map((country) => country.name)}
+              onSubmit={handleMapSubmit}
+            />
+          </DialogContent>
+        </BootstrapDialog>
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='content'
+          name='content'
+          label='Review Content'
+          multiline
+          rows={5}
+          value={content}
+          sx={{
+            mt: 8,
+          }}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <Box>
+          <Typography variant='h6'> Final Rating</Typography>
+          <Rating
+            name='rating'
+            value={rating}
+            onChange={(_, newRating) => {
+              setRating(newRating ?? 0);
+            }}
+          />
+        </Box>
+      </PostForm>
+    </Layout>
   );
 }
