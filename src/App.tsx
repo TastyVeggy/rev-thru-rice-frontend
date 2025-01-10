@@ -11,9 +11,9 @@ import './components/map/geocode.css';
 import NewReviewPage from './pages/NewReview';
 import SubforumPage from './pages/Subforum';
 import PostPage from './pages/Post';
+import ReviewPage from './pages/Review';
 
 function App() {
-  // Cannot seem to get the jwt-token cookie to not get destroyed upon page refresh so I guess this is useless for now
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(checkAuth());
@@ -28,6 +28,7 @@ function App() {
       <Route path='/new_review' element={<NewReviewPage />} />
       <Route path='/subforums/:id' element={<SubforumPage />} />
       <Route path='/posts/:id' element={<PostPage />} />
+      <Route path='/reviews/:id' element={<ReviewPage />} />
     </Routes>
   );
 }

@@ -5,7 +5,6 @@ import { useFetchPosts } from '../hooks/useFetchPosts';
 import { useEffect, useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { Box, Button, Pagination, Typography } from '@mui/material';
-import { fetchCountries } from '../features/slices/countriesSlice';
 import { fetchSubforums } from '../features/slices/subforumsSlice';
 import { PostCard } from '../components/cards/PostCard';
 import { useFetchPostCount } from '../hooks/useFetchPostCount';
@@ -22,9 +21,6 @@ export default function SubforumPage() {
   const countryID: number | null =
     countryIDString === null ? null : Number(countryIDString);
   const dispatch = useDispatch<AppDispatch>();
-  const { items: countries, status: countriesStatus } = useSelector(
-    (state: RootState) => state.countries
-  );
   const { items: subforums, status: subforumsStatus } = useSelector(
     (state: RootState) => state.subforums
   );
@@ -46,13 +42,10 @@ export default function SubforumPage() {
   );
 
   useEffect(() => {
-    if (countriesStatus === 'idle') {
-      dispatch(fetchCountries());
-    }
     if (subforumsStatus === 'idle') {
       dispatch(fetchSubforums());
     }
-  }, [countriesStatus, subforumsStatus, dispatch]);
+  }, [subforumsStatus, dispatch]);
 
   const handleClickNew = () => {
     if (isAuthenticated) {
@@ -93,18 +86,12 @@ export default function SubforumPage() {
         </Button>
       </Box>
       <Box maxWidth='lg'>
-        {posts ? (
+        {posts && currentSubforum ? (
           posts.map((post) => (
             <PostCard
               key={post.id}
-              id={post.id}
-              title={post.title}
-              username={post.username}
-              countries={countries.filter((country) =>
-                post.countries.includes(country.name)
-              )}
-              commentCount={post.comment_count}
-              createdAt={post.created_at}
+              post={post}
+              subforumCategory={currentSubforum.category}
             />
           ))
         ) : (
@@ -129,7 +116,7 @@ export default function SubforumPage() {
           </Box>
         )}
       </Box>
-      {postCount !== 0 ? (
+      {postCount !== 0 && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Pagination
             count={Math.ceil(postCount / postsPerPage) - 1}
@@ -138,8 +125,6 @@ export default function SubforumPage() {
             color='primary'
           />
         </Box>
-      ) : (
-        <></>
       )}
     </Layout>
   );

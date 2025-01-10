@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import React from 'react';
 
-interface confirmDialogProps {
+interface ConfirmDialogProps {
   open: boolean;
   title: string;
   onClose: () => void;
@@ -10,7 +10,7 @@ interface confirmDialogProps {
   children?: React.ReactNode;
 }
 
-export const ConfirmDialog: React.FC<confirmDialogProps> = ({
+export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   open,
   title,
   onClose,

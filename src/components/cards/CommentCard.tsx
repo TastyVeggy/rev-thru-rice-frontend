@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Comment } from '../../interfaces/comment';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../features/store';
-import { ConfirmDialog } from '../dialogs/confirmDialog';
+import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 
 interface CommentCardProps {
   comment: Comment;
@@ -51,7 +51,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
         </Typography>
       </Box>
       <Typography variant='body2'>{comment.content}</Typography>
-      {comment.user_id === user?.id ? (
+      {comment.user_id === user?.id && (
         <Grid2 container justifyContent='flex-end'>
           <IconButton
             aria-label='edit'
@@ -68,8 +68,6 @@ export const CommentCard: React.FC<CommentCardProps> = ({
             <DeleteIcon />
           </IconButton>
         </Grid2>
-      ) : (
-        <></>
       )}
       <ConfirmDialog
         open={openConfirmDeleteDialog}

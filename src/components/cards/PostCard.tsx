@@ -6,36 +6,55 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { darkenColorRGB } from '../../utils/rgb';
 import CommentIcon from '@mui/icons-material/Comment';
 import { timeAgo } from '../../utils/time';
 import { Country } from '../../interfaces/country';
+import { Post } from '../../interfaces/post';
+import { fetchCountries } from '../../features/slices/countriesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../features/store';
 
 interface PostCardProps {
-  id: number;
-  title: string;
-  username: string;
-  countries: Country[];
-  commentCount: number;
-  createdAt: string;
+  post: Post;
+  subforumCategory: string;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
-  id,
-  title,
-  username,
-  countries,
-  commentCount,
-  createdAt,
+  post,
+  subforumCategory,
 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
   const hoveredColor = darkenColorRGB(theme.palette.background.paper);
+  const { items: countries, status: countriesStatus } = useSelector(
+    (state: RootState) => state.countries
+  );
+  const [postCountries, setPostCountries] = useState<Country[]>([]);
+
+  useEffect(() => {
+    if (countriesStatus === 'idle') {
+      dispatch(fetchCountries());
+    }
+  }, [countriesStatus, dispatch]);
+
+  useEffect(() => {
+    setPostCountries(
+      countries.filter((country) => post.countries.includes(country.name))
+    );
+  }, [post, countriesStatus]);
+
   const handlePostClick = () => {
-    navigate(`/posts/${id}`);
+    if (subforumCategory === 'Review') {
+      navigate(`/reviews/${post.id}`);
+    } else {
+      navigate(`/posts/${post.id}`);
+    }
   };
+
   const handleCountryClick = (countryID: number, e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/?country_id=${countryID}`);
@@ -62,18 +81,18 @@ export const PostCard: React.FC<PostCardProps> = ({
             }}
           >
             <Typography variant='h5' fontWeight='bold'>
-              {title}
+              {post.title}
             </Typography>
 
             <Box display='flex'>
               <CommentIcon sx={{ mr: 1 }} />
               <Typography variant='body2' color='text.primary'>
-                {commentCount}
+                {post.comment_count}
               </Typography>
             </Box>
           </Box>
         }
-        subheader={countries.map((country) => (
+        subheader={postCountries.map((country) => (
           <Tooltip key={country.id} title={`View ${country.name} Forum`}>
             <span
               className={`fi fi-${country.code.toLowerCase()}`}
@@ -88,7 +107,7 @@ export const PostCard: React.FC<PostCardProps> = ({
           {content.length < 100 ? content : `${content.substring(0, 100)}...`}
         </Typography> */}
         <Typography variant='body2' color='text.secondary'>
-          {`by ${username} • ${timeAgo(createdAt)}`}
+          {`by ${post.username} • ${timeAgo(post.created_at)}`}
         </Typography>
       </Box>
     </Card>

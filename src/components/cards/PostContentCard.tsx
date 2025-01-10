@@ -26,19 +26,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../features/store';
 import { Post } from '../../interfaces/post';
 import { Country } from '../../interfaces/country';
-import { ConfirmDialog } from '../dialogs/confirmDialog';
+import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { fetchSubforums } from '../../features/slices/subforumsSlice';
 
 interface PostContentProps {
   post: Post;
   onEdit: (newPost: Post) => void;
   onDelete: (postID: number) => void;
+  countriesFixed?: boolean;
 }
 
 export const PostContent: React.FC<PostContentProps> = ({
   post,
   onEdit,
   onDelete,
+  countriesFixed = false,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -97,7 +99,7 @@ export const PostContent: React.FC<PostContentProps> = ({
   };
 
   return (
-    <Card sx={{ p: 3, mb: 4 }}>
+    <Card sx={{ p: 2, mb: 4, height: '100%' }}>
       <CardHeader
         sx={{ pb: 0 }}
         title={
@@ -106,55 +108,64 @@ export const PostContent: React.FC<PostContentProps> = ({
           </Typography>
         }
       />
-      <Box display='flex' sx={{ ml: 2 }}>
-        <Typography
-          variant='subtitle1'
-          color='text.secondary'
-          gutterBottom
-          sx={{ mr: 2 }}
-        >
-          Posted by{' '}
-          <span style={{ fontWeight: 'bold', color: '#080808' }}>
-            {post.username}
-          </span>{' '}
-          • {timeAgo(post.created_at)}
-        </Typography>
-        {postCountries.map((country) => (
-          <Tooltip key={country.id} title={`View ${country.name} Forum`}>
-            <span
-              className={`fi fi-${country.code.toLowerCase()}`}
-              style={{ marginRight: 8 }}
-              onClick={() => handleCountryClick(country.id)}
-            />
-          </Tooltip>
-        ))}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '80%',
+        }}
+      >
+        <Box sx={{ p: 2 }}>
+          <Box display='flex'>
+            <Typography
+              variant='subtitle1'
+              color='text.secondary'
+              gutterBottom
+              sx={{ mr: 2 }}
+            >
+              Posted by{' '}
+              <span style={{ fontWeight: 'bold', color: '#080808' }}>
+                {post.username}
+              </span>{' '}
+              • {timeAgo(post.created_at)}
+            </Typography>
+            {postCountries.map((country) => (
+              <Tooltip key={country.id} title={`View ${country.name} Forum`}>
+                <span
+                  className={`fi fi-${country.code.toLowerCase()}`}
+                  style={{ marginRight: 8 }}
+                  onClick={() => handleCountryClick(country.id)}
+                />
+              </Tooltip>
+            ))}
+          </Box>
+          <Divider sx={{ my: 2 }} />
+          <Box>
+            <Typography variant='body1' component='p'>
+              {post.content}
+            </Typography>
+          </Box>
+        </Box>
+        {post.user_id === user?.id && (
+          <Grid2 container justifyContent='flex-end'>
+            <IconButton
+              aria-label='edit'
+              sx={{ mr: 1 }}
+              onClick={() => setOpenEditDialog(true)}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label='delete'
+              sx={{ mr: 1 }}
+              onClick={() => setOpenConfirmDelete(true)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Grid2>
+        )}
       </Box>
-      <Divider sx={{ my: 2 }} />
-      <Box sx={{ p: 2 }}>
-        <Typography variant='body1' component='p'>
-          {post.content}
-        </Typography>
-      </Box>
-      {post.user_id === user?.id ? (
-        <Grid2 container justifyContent='flex-end'>
-          <IconButton
-            aria-label='edit'
-            sx={{ mr: 1 }}
-            onClick={() => setOpenEditDialog(true)}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            aria-label='delete'
-            sx={{ mr: 1 }}
-            onClick={() => setOpenConfirmDelete(true)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Grid2>
-      ) : (
-        <></>
-      )}
       <ConfirmDialog
         open={openConfirmDelete}
         title='Delete post? You cannot undo this action'
@@ -197,35 +208,39 @@ export const PostContent: React.FC<PostContentProps> = ({
             )?.name
           }
         />
-        <FormControl fullWidth margin='normal'>
-          <InputLabel id='countries-multiple-chip-label'>Countries</InputLabel>
-          <Select
-            labelId='countries-multiple-chip-label'
-            id='countries-multiple-chip'
-            label='Countries'
-            multiple
-            value={editablePost.countries}
-            onChange={handleCountriesChange}
-            input={<OutlinedInput id='countries' label='Countries' />}
-            renderValue={(selectedCountry) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selectedCountry.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-          >
-            {countries.map((country) => (
-              <MenuItem key={country.id} value={country.name}>
-                <span
-                  className={`fi fi-${country.code.toLowerCase()}`}
-                  style={{ marginRight: 7 }}
-                />
-                {country.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {!countriesFixed && (
+          <FormControl fullWidth margin='normal'>
+            <InputLabel id='countries-multiple-chip-label'>
+              Countries
+            </InputLabel>
+            <Select
+              labelId='countries-multiple-chip-label'
+              id='countries-multiple-chip'
+              label='Countries'
+              multiple
+              value={editablePost.countries}
+              onChange={handleCountriesChange}
+              input={<OutlinedInput id='countries' label='Countries' />}
+              renderValue={(selectedCountry) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selectedCountry.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+            >
+              {countries.map((country) => (
+                <MenuItem key={country.id} value={country.name}>
+                  <span
+                    className={`fi fi-${country.code.toLowerCase()}`}
+                    style={{ marginRight: 7 }}
+                  />
+                  {country.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         <TextField
           margin='normal'
           required

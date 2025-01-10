@@ -26,18 +26,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import { PostForm } from '../components/forms/PostForm';
 import 'flag-icons/css/flag-icons.min.css';
 import { createReviewService } from '../services/createShopService';
-import Map from '../components/map/Map';
+import { MapSearch } from '../components/map/MapSearch';
 import { ReviewReq } from '../interfaces/review';
 import { Layout } from '../components/layout/Layout';
+import { MapSearchDialog } from '../components/dialogs/MapSearchDialog';
 
 export default function NewReviewPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { items: subforums, status: subforumsStatus } = useSelector(
     (state: RootState) => state.subforums
-  );
-  const { items: countries, status: countriesStatus } = useSelector(
-    (state: RootState) => state.countries
   );
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
@@ -60,10 +58,7 @@ export default function NewReviewPage() {
     if (subforumsStatus === 'idle') {
       dispatch(fetchSubforums());
     }
-    if (countriesStatus === 'idle') {
-      dispatch(fetchCountries());
-    }
-  }, [dispatch, subforumsStatus, countriesStatus]);
+  }, [dispatch, subforumsStatus]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -132,15 +127,6 @@ export default function NewReviewPage() {
     setOpenMap(false);
   };
 
-  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-  }));
-
   return (
     <Layout>
       <PostForm category='Review' handleSubmit={handleSubmit}>
@@ -196,11 +182,11 @@ export default function NewReviewPage() {
           required
           fullWidth
           disabled={!isLocationPicked}
-          id='name'
-          name='name'
+          id='address'
+          name='address'
           label='Address of the Shop'
           value={shopAddress}
-          onChange={(e) => setShopName(e.target.value)}
+          onChange={(e) => setShopAddress(e.target.value)}
           helperText={
             isLocationPicked
               ? 'Edit if necessary'
@@ -211,12 +197,12 @@ export default function NewReviewPage() {
           required
           fullWidth
           disabled
-          id='name'
-          name='name'
+          id='country'
+          name='country'
           label='Country of the Shop'
           sx={{ mt: 1 }}
           value={shopCountry}
-          onChange={(e) => setShopName(e.target.value)}
+          onChange={(e) => setShopCountry(e.target.value)}
           helperText='Determined by the location on map you pick'
         />
         <Button
@@ -227,44 +213,12 @@ export default function NewReviewPage() {
         >
           Select shop location
         </Button>
-        <BootstrapDialog
-          onClose={handleCloseMap}
-          aria-labelledby='map-dialog'
+        <MapSearchDialog
+          title={'Select your shop location'}
           open={openMap}
-          maxWidth='lg'
-          fullWidth
-        >
-          <DialogTitle
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingLeft: '16px',
-            }}
-          >
-            <Typography
-              variant='h5'
-              component='span'
-              sx={{ fontWeight: 'bold' }}
-            >
-              Select your shop location
-            </Typography>
-            <IconButton edge='end' color='primary' onClick={handleCloseMap}>
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <Typography color='#FF0000' sx={{ mb: 2 }}>
-              Note: Even though using the search function will add a marker, you
-              yourself will have to click a point on the map before submitting
-              location
-            </Typography>
-            <Map
-              allowedCountries={countries.map((country) => country.name)}
-              onSubmit={handleMapSubmit}
-            />
-          </DialogContent>
-        </BootstrapDialog>
+          onClose={handleCloseMap}
+          onSubmit={handleMapSubmit}
+        />
         <TextField
           margin='normal'
           required

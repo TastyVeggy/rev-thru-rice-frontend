@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useFetchComments } from '../hooks/useFetchComments';
 import { Layout } from '../components/layout/Layout';
 import { PostContent } from '../components/cards/PostContentCard';
-import { Button, Grid2, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid2, TextField, Typography } from '@mui/material';
 import { CommentCard } from '../components/cards/CommentCard';
 import { createCommentService } from '../services/createCommentService';
 import { Comment, CommentReq } from '../interfaces/comment';
@@ -15,14 +15,22 @@ import { deletePostService } from '../services/deletePostService';
 import { editCommentService } from '../services/editCommentService';
 import { config } from '../config';
 import { editPostService } from '../services/editPostService';
+import { Shop, ShopReq } from '../interfaces/review';
+import { ShopCard } from '../components/cards/ShopCard';
+import { useRating } from '../hooks/useRating';
+import { editShopService } from '../services/editShopService';
 
-export default function PostPage() {
+export default function ReviewPage() {
   const commentsPerPage = 5;
   const { id: postIDString } = useParams();
   const postID = Number(postIDString);
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [post, setPost] = useState<Post | null>(null);
+  const [shop, setShop] = useState<Shop | null>(null);
+  // rating refers to the ui displayed rating
+  const [ratingScore, setRatingScore] = useState<number>(0);
+  const [canMutateRating, setCanMutateRating] = useState(false);
   const [page, setPage] = useState(1);
   const [comments, setComments] = useState<Comment[]>([]);
   const { comments: freshComments } = useFetchComments({
@@ -34,23 +42,40 @@ export default function PostPage() {
   const [newCommentContent, setNewCommentContent] = useState('');
   const [focusNewComment, setFocusNewComment] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const { initialRatingScore, hasFetchedInitialRating } = useRating({
+    shop,
+    newRatingScore: ratingScore,
+    canMutateRating,
+  });
 
-  // Get the post when component initially mounts
+  // Get the review when component initially mounts
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`${config.apiUrl}/posts/${postID}`);
-        if (!res.ok) {
-          console.warn(await res.text());
-          throw new Error('Failed to fetch posts');
+        const reviewRes = await fetch(
+          `${config.apiUrl}/posts/${postID}/shop_review`
+        );
+        if (!reviewRes.ok) {
+          console.warn(await reviewRes.text());
+          throw new Error('Failed to fetch review');
         }
-        setPost(await res.json());
+        const reviewData = await reviewRes.json();
+        setShop(reviewData.shop);
+        setPost(reviewData.post);
       } catch (err) {
         console.warn(err);
       }
     };
     fetchPost();
   }, [postID]);
+
+  // To tell useRating hook that it can start executing the necessary api requests in accordance to change in rating done by user
+  useEffect(() => {
+    if (hasFetchedInitialRating) {
+      setRatingScore(initialRatingScore);
+      setCanMutateRating(true);
+    }
+  }, [hasFetchedInitialRating]);
 
   // Update comments when there are new comments
   useEffect(() => {
@@ -68,7 +93,7 @@ export default function PostPage() {
   // To make sure the current comment count is synchronised when new comments are added during the same session to avoid having to fetch the post again just to update the comment count
   useEffect(() => {
     if (post) {
-      setCommentCount(post?.comment_count);
+      setCommentCount(post.comment_count);
     }
   }, [post]);
 
@@ -158,15 +183,54 @@ export default function PostPage() {
     }
   };
 
+  const handleEditShop = async (newShop: Shop) => {
+    try {
+      const newShopReq: ShopReq = {
+        name: newShop.name,
+        lat: newShop.lat,
+        lng: newShop.lng,
+        address: newShop.address,
+        country: newShop.country,
+      };
+      const newShopRes: Shop = await editShopService(newShopReq, newShop.id);
+      setShop(newShopRes);
+      setPost((prevPost) =>
+        prevPost ? { ...prevPost, countries: [newShop.country] } : null
+      );
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const handleMutateRating = async (newScore: number) => {
+    setRatingScore(newScore);
+  };
+
   return (
     <Layout>
-      {post && (
-        <PostContent
-          post={post}
-          onEdit={handleEditPost}
-          onDelete={handleDeletePost}
-        />
-      )}
+      <Box display='flex' sx={{ pb: 4 }}>
+        {post && (
+          <Box sx={{ flex: 3 }}>
+            <PostContent
+              post={post}
+              onEdit={handleEditPost}
+              onDelete={handleDeletePost}
+              countriesFixed
+            />
+          </Box>
+        )}
+        {shop && post && (
+          <Box sx={{ flex: 1, ml: 1 }} minHeight='550px' maxHeight='600px'>
+            <ShopCard
+              shop={shop}
+              reviewWriterID={post.user_id}
+              currentUserRatingScore={ratingScore}
+              onMutateRating={handleMutateRating}
+              onEditShop={handleEditShop}
+            />
+          </Box>
+        )}
+      </Box>
 
       <Typography variant='h5' gutterBottom>
         Comments
