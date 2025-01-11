@@ -56,7 +56,7 @@ export function useFetchPosts({
     };
 
     fetchPosts();
-  }, [countryID, page]);
+  }, [countryID, subforumID, page]);
 
   return { posts, loading, error };
 }

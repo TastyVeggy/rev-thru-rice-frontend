@@ -1,32 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../features/store';
 import { useEffect, useState } from 'react';
-import { fetchCountries } from '../features/slices/countriesSlice';
 import { fetchSubforums } from '../features/slices/subforumsSlice';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert,
   Box,
   Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Rating,
   Select,
   SelectChangeEvent,
-  styled,
   TextField,
   Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { PostForm } from '../components/forms/PostForm';
 import 'flag-icons/css/flag-icons.min.css';
 import { createReviewService } from '../services/createShopService';
-import { MapSearch } from '../components/map/MapSearch';
 import { ReviewReq } from '../interfaces/review';
 import { Layout } from '../components/layout/Layout';
 import { MapSearchDialog } from '../components/dialogs/MapSearchDialog';
@@ -37,7 +29,9 @@ export default function NewReviewPage() {
   const { items: subforums, status: subforumsStatus } = useSelector(
     (state: RootState) => state.subforums
   );
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, status: authStatus } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -61,10 +55,13 @@ export default function NewReviewPage() {
   }, [dispatch, subforumsStatus]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (
+      !isAuthenticated &&
+      !(authStatus == 'idle' || authStatus == 'loading')
+    ) {
       navigate('/login', { state: { from: location.pathname } });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +92,7 @@ export default function NewReviewPage() {
           reviewReq,
           subforumSelected
         );
-        navigate(`/reviews/${newReview.shop.id}`);
+        navigate(`/review/${newReview.post.id}`);
       }
     } catch (error) {
       navigate('/');

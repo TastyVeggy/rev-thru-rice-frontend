@@ -41,8 +41,8 @@ export const SubforumCard: React.FC<SubforumCardProps> = ({
               component='a'
               href={
                 countryID
-                  ? `/subforums/${id}?country_id=${countryID}`
-                  : `/subforums/${id}`
+                  ? `/subforum/${id}?country_id=${countryID}`
+                  : `/subforum/${id}`
               }
               color='inherit'
               sx={{
@@ -87,8 +87,8 @@ export const SubforumCard: React.FC<SubforumCardProps> = ({
           component='a'
           href={
             countryID
-              ? `/subforums/${id}?country_id=${countryID}`
-              : `/subforums/${id}`
+              ? `/subforum/${id}?country_id=${countryID}`
+              : `/subforum/${id}`
           }
         >
           View Subforum

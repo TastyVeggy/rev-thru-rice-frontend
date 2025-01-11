@@ -12,6 +12,7 @@ import NewReviewPage from './pages/NewReview';
 import SubforumPage from './pages/Subforum';
 import PostPage from './pages/Post';
 import ReviewPage from './pages/Review';
+import UserPage from './pages/User';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,14 +22,16 @@ function App() {
 
   return (
     <Routes>
+      <Route path='' element={<HomePage />} />
       <Route path='/' element={<HomePage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
       <Route path='/new_post' element={<NewPostPage />} />
       <Route path='/new_review' element={<NewReviewPage />} />
-      <Route path='/subforums/:id' element={<SubforumPage />} />
-      <Route path='/posts/:id' element={<PostPage />} />
-      <Route path='/reviews/:id' element={<ReviewPage />} />
+      <Route path='/subforum/:id' element={<SubforumPage />} />
+      <Route path='/post/:id' element={<PostPage />} />
+      <Route path='/review/:id' element={<ReviewPage />} />
+      <Route path='/user/:id' element={<UserPage />} />
     </Routes>
   );
 }

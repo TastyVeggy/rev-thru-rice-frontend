@@ -26,7 +26,7 @@ export default function SubforumPage() {
   );
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [page, setPage] = useState(1);
-  const { posts } = useFetchPosts({
+  const { posts, loading: postsLoading } = useFetchPosts({
     page,
     subforumID,
     countryID,
@@ -85,37 +85,39 @@ export default function SubforumPage() {
           </Typography>
         </Button>
       </Box>
-      <Box maxWidth='lg'>
-        {posts && currentSubforum ? (
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              subforumCategory={currentSubforum.category}
-            />
-          ))
-        ) : (
-          <Box
-            sx={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography variant='h1' fontWeight='bold'>
-              No posts here :(
-            </Typography>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleClickNew}
+      {!postsLoading && (
+        <Box maxWidth='lg'>
+          {posts && currentSubforum ? (
+            posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                subforumCategory={currentSubforum.category}
+              />
+            ))
+          ) : (
+            <Box
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
             >
-              So make one!
-            </Button>
-          </Box>
-        )}
-      </Box>
+              <Typography variant='h1' fontWeight='bold'>
+                No posts here :(
+              </Typography>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={handleClickNew}
+              >
+                So make one!
+              </Button>
+            </Box>
+          )}
+        </Box>
+      )}
       {postCount !== 0 && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Pagination

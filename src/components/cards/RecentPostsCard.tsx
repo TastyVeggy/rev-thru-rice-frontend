@@ -1,5 +1,4 @@
 import React from 'react';
-import { Post } from '../../hooks/useFetchPosts';
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { timeAgo } from '../../utils/time';
+import { Post } from '../../interfaces/post';
 
 interface RecentPostsProps {
   posts: Post[];
@@ -49,7 +49,7 @@ export const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
                       textDecoration: 'none',
                       '&:hover': { color: 'secondary.main' },
                     }}
-                    href={`/posts/${post.id}`}
+                    href={`/post/${post.id}`}
                   >
                     {post.title}
                   </Typography>

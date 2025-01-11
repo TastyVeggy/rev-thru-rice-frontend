@@ -49,9 +49,9 @@ export const PostCard: React.FC<PostCardProps> = ({
 
   const handlePostClick = () => {
     if (subforumCategory === 'Review') {
-      navigate(`/reviews/${post.id}`);
+      navigate(`/review/${post.id}`);
     } else {
-      navigate(`/posts/${post.id}`);
+      navigate(`/post/${post.id}`);
     }
   };
 

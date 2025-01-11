@@ -29,7 +29,9 @@ export default function NewPostPage() {
   const { items: countries, status: countriesStatus } = useSelector(
     (state: RootState) => state.countries
   );
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, status: authStatus } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -46,10 +48,13 @@ export default function NewPostPage() {
     }
   }, [dispatch, subforumsStatus, countriesStatus]);
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (
+      !isAuthenticated &&
+      !(authStatus == 'idle' || authStatus == 'loading')
+    ) {
       navigate('/login', { state: { from: location.pathname } });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +63,7 @@ export default function NewPostPage() {
         { title, content, countries: countriesSelected },
         subforumSelected
       );
-      navigate(`/posts/${newPost.id}`);
+      navigate(`/post/${newPost.id}`);
     } catch (error) {
       console.error('Post creation failed: ', error);
       navigate('/');
