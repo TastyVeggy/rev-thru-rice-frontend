@@ -84,7 +84,7 @@ export default function HomePage() {
         )}
       </Box>
       <Grid2 container spacing={4}>
-        <Grid2 size={{ xs: 8, md: 8 }}>
+        <Grid2 size={{ md: 12, lg: 8 }}>
           {subforumsWithPostCount.map((subforum) => (
             <SubforumCard
               key={subforum.id}
@@ -96,6 +96,27 @@ export default function HomePage() {
               image={subforum.image}
             />
           ))}
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4 }}>
+          <Box sx={{ mb: 2 }}>
+            <Button
+              variant='contained'
+              color='primary'
+              sx={{ mr: 1 }}
+              onClick={() => handleNewContentClick('new_post')}
+            >
+              <Typography sx={{ fontWeight: 'bold' }}>New Post</Typography>
+            </Button>
+            <Button
+              variant='contained'
+              color='secondary'
+              sx={{ mr: 1 }}
+              onClick={() => handleNewContentClick('new_review')}
+            >
+              <Typography sx={{ fontWeight: 'bold' }}>New Review</Typography>
+            </Button>
+          </Box>
+          <RecentPosts posts={posts} />
           <Card
             sx={{
               mt: 4,
@@ -127,27 +148,6 @@ export default function HomePage() {
               </Box>
             </CardContent>
           </Card>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 4 }}>
-          <Box sx={{ mb: 2 }}>
-            <Button
-              variant='contained'
-              color='primary'
-              sx={{ mr: 1 }}
-              onClick={() => handleNewContentClick('new_post')}
-            >
-              <Typography sx={{ fontWeight: 'bold' }}>New Post</Typography>
-            </Button>
-            <Button
-              variant='contained'
-              color='secondary'
-              sx={{ mr: 1 }}
-              onClick={() => handleNewContentClick('new_review')}
-            >
-              <Typography sx={{ fontWeight: 'bold' }}>New Review</Typography>
-            </Button>
-          </Box>
-          <RecentPosts posts={posts} />
         </Grid2>
       </Grid2>
     </Layout>

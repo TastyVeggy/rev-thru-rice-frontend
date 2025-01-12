@@ -6,7 +6,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { darkenColorRGB } from '../../utils/rgb';
 import CommentIcon from '@mui/icons-material/Comment';

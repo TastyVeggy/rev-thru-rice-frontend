@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 interface HeaderMenuProps {
@@ -34,7 +33,6 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({
           {label}
         </Typography>
         <ExpandMoreIcon />
-        {/* <ChevronDown size={20} /> */}
       </Button>
       <Menu
         id={`${label}-menu`}

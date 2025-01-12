@@ -1,5 +1,4 @@
 import { Box, Button, Card, CardHeader, Typography } from '@mui/material';
-import React from 'react';
 
 interface SubforumCardProps {
   id: number;
@@ -62,7 +61,7 @@ export const SubforumCard: React.FC<SubforumCardProps> = ({
       <Box
         sx={{
           p: 2,
-          height: 300,
+          height: { xs: 200, sm: 250, md: 300, lg: 300 },
           position: 'relative',
           overflow: 'hidden',
         }}

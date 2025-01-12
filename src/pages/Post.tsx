@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useFetchComments } from '../hooks/useFetchComments';
 import { Layout } from '../components/layout/Layout';
 import { PostContent } from '../components/cards/PostContentCard';
-import { Button, Grid2, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid2, TextField, Typography } from '@mui/material';
 import { CommentCard } from '../components/cards/CommentCard';
 import { createCommentService } from '../services/createCommentService';
 import { Comment, CommentReq } from '../interfaces/comment';
@@ -160,13 +160,15 @@ export default function PostPage() {
 
   return (
     <Layout>
-      {post && (
-        <PostContent
-          post={post}
-          onEdit={handleEditPost}
-          onDelete={handleDeletePost}
-        />
-      )}
+      <Box sx={{ mb: 4 }}>
+        {post && (
+          <PostContent
+            post={post}
+            onEdit={handleEditPost}
+            onDelete={handleDeletePost}
+          />
+        )}
+      </Box>
 
       <Typography variant='h5' gutterBottom>
         Comments

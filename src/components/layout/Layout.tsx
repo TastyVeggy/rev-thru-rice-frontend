@@ -3,11 +3,12 @@ import {
   Container,
   createTheme,
   CssBaseline,
+  responsiveFontSizes,
   ThemeProvider,
 } from '@mui/material';
 import { Header } from './Header';
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       main: '#1a2c1a',
@@ -26,6 +27,8 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+theme = responsiveFontSizes(theme);
+
 export const Layout: React.FC<LayoutProps> = ({
   withBackground = false,
   children,
@@ -33,7 +36,13 @@ export const Layout: React.FC<LayoutProps> = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', bdcolor: 'background.default' }}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'background.default',
+          width: '100%',
+        }}
+      >
         <Header />
         {withBackground ? (
           <Box
@@ -52,10 +61,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {children}
           </Box>
         ) : (
-          <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
-            {' '}
-            {children}
-          </Container>
+          <Container sx={{ mt: 4, mb: 4 }}> {children}</Container>
         )}
       </Box>
     </ThemeProvider>

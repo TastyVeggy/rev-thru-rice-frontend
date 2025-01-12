@@ -13,7 +13,7 @@ import { Shop } from '../../interfaces/review';
 import { Map } from '../map/Map';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../features/store';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
@@ -81,7 +81,9 @@ export const ShopCard: React.FC<ShopCardProps> = ({
   return (
     <Card
       sx={{
-        height: '100%',
+        height: '600px',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <CardHeader

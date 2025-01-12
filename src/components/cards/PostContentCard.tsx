@@ -16,7 +16,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { timeAgo } from '../../utils/time';
 import { fetchCountries } from '../../features/slices/countriesSlice';
 import { useNavigate } from 'react-router-dom';
@@ -99,7 +99,7 @@ export const PostContent: React.FC<PostContentProps> = ({
   };
 
   return (
-    <Card sx={{ p: 2, mb: 4, height: '100%' }}>
+    <Card sx={{ p: 2, height: '100%', width: '100%' }}>
       <CardHeader
         sx={{ pb: 0 }}
         title={

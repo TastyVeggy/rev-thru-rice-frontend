@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../features/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/slices/authSlice';
+import MenuIcon from '@mui/icons-material/Menu';
+import ForumIcon from '@mui/icons-material/Forum';
+import PublicIcon from '@mui/icons-material/Public';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SportsMotorsportsIcon from '@mui/icons-material/SportsMotorsports';
@@ -24,6 +27,9 @@ import { fetchCountries } from '../../features/slices/countriesSlice';
 import { config } from '../../config';
 
 export function Header() {
+  const [anchorElSideMenu, setAnchorElSideMenu] = useState<null | HTMLElement>(
+    null
+  );
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [anchorElSubforums, setAnchorElSubforums] =
     useState<null | HTMLElement>(null);
@@ -62,15 +68,21 @@ export function Header() {
   const handleOpenCountriesMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElCountries(event.currentTarget);
   };
+  const handleOpenSideMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorElSideMenu(event.currentTarget);
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
   const handleCloseSubforumsMenu = () => {
     setAnchorElSubforums(null);
   };
   const handleCloseCountriesMenu = () => {
     setAnchorElCountries(null);
+  };
+  const handleCloseSideMenu = () => {
+    setAnchorElSideMenu(null);
   };
 
   const handleLogout = () => {
@@ -98,27 +110,116 @@ export function Header() {
   };
 
   return (
-    <AppBar position='static' sx={{ bgcolor: 'primary.main', height: '150px' }}>
+    <AppBar
+      position='static'
+      sx={{
+        bgcolor: 'primary.main',
+        height: { xs: 80, sm: 100, md: 100, lg: 150 },
+      }}
+    >
       <Container maxWidth='xl'>
         <Toolbar
           disableGutters
           sx={{
-            height: '150px',
+            height: { xs: 80, sm: 100, md: 100, lg: 150 },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-start',
+            position: 'relative',
           }}
         >
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'flex', sm: 'flex', md: 'flex', lg: 'none' },
+            }}
+          >
+            <IconButton
+              size='large'
+              onClick={handleOpenSideMenu}
+              color='inherit'
+            >
+              <MenuIcon fontSize='large' />
+            </IconButton>
+            <Menu
+              id='sidemenu'
+              anchorEl={anchorElSideMenu}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={!!anchorElSideMenu}
+              onClose={handleCloseSideMenu}
+              sx={{
+                display: { xs: 'block', sm: 'block', md: 'block', lg: 'none' },
+              }}
+            >
+              {[
+                <MenuItem
+                  key='sideSubforumsMenu'
+                  onClick={handleOpenSubforumsMenu}
+                >
+                  <ForumIcon sx={{ mr: 1 }} />
+                  <Typography textAlign='center'>Subforums</Typography>
+                </MenuItem>,
+                <MenuItem
+                  key='sideCountriesMenu'
+                  onClick={handleOpenCountriesMenu}
+                >
+                  <PublicIcon sx={{ mr: 1 }} />
+                  <Typography textAlign='center'>Countries</Typography>
+                </MenuItem>,
+              ]}
+            </Menu>
+          </Box>
+          <Box
+            sx={{
+              position: {
+                sm: 'absolute',
+                md: 'absolute',
+                lg: 'relative',
+              },
+              left: {
+                sm: '50%',
+                md: '50%',
+                lg: 'initial',
+              },
+              transform: {
+                sm: 'translateX(-50%)',
+                md: 'translateX(-50%)',
+                lg: 'none',
+              },
+              display: { xs: 'none', sm: 'block', md: 'block', lg: 'flex' },
+            }}
+          >
             <a href='/'>
-              <img
-                src={config.logoUrl}
-                alt='Logo'
-                style={{ width: 'auto', height: 120 }}
-              />
+              <img src={config.logoUrl} alt='Logo' className='logo' />
             </a>
           </Box>
-          <Box sx={{ flexGrow: 1, display: 'flex' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: { xs: 'block', sm: 'none', md: 'none', lg: 'none' },
+            }}
+          >
+            <a href='/'>
+              <img src={'/text_logo.png'} alt='Logo' className='logo' />
+            </a>
+          </Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex' },
+            }}
+          >
             <HeaderMenu
               anchorEl={anchorElSubforums}
               label='subforums'
@@ -137,7 +238,12 @@ export function Header() {
             />
           </Box>
           {(authStatus === 'succeeded' || authStatus === 'failed') && (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: 'flex',
+              }}
+            >
               {isAuthenticated ? (
                 <>
                   <Tooltip title='Open settings'>
@@ -145,14 +251,39 @@ export function Header() {
                       onClick={handleOpenUserMenu}
                       sx={{ p: 0, color: 'white' }}
                     >
-                      <SportsMotorsportsIcon sx={{ mr: 2 }} fontSize='large' />
-                      <Typography
-                        textAlign='center'
-                        variant='h5'
-                        sx={{ fontWeight: 700 }}
+                      <Box display={{ xs: 'none', sm: 'flex' }}>
+                        <SportsMotorsportsIcon
+                          sx={{ mr: 2 }}
+                          fontSize='large'
+                        />
+                        <Typography
+                          textAlign='center'
+                          variant='h5'
+                          sx={{ fontWeight: 700 }}
+                        >
+                          {user?.username}
+                        </Typography>
+                      </Box>
+                      <Box
+                        display={{
+                          xs: 'flex',
+                          sm: 'none',
+                          md: 'none',
+                          lg: 'none',
+                        }}
                       >
-                        {user?.username}
-                      </Typography>
+                        <SportsMotorsportsIcon
+                          sx={{ mr: 1 }}
+                          fontSize='medium'
+                        />
+                        <Typography
+                          textAlign='center'
+                          variant='subtitle1'
+                          sx={{ fontWeight: 'bold' }}
+                        >
+                          {user?.username}
+                        </Typography>
+                      </Box>
                     </IconButton>
                   </Tooltip>
                   <Menu
@@ -182,20 +313,52 @@ export function Header() {
                   </Menu>
                 </>
               ) : (
-                <>
+                <Box display='flex'>
                   <Button
-                    sx={{ mx: 2, my: 2 }}
+                    sx={{ mr: 2, my: 2 }}
                     color='inherit'
                     component={Link}
                     to='/login'
                     state={{ from: location.pathname }}
                   >
-                    <Typography variant='h5' sx={{ fontWeight: 500 }}>
-                      Login
-                    </Typography>
+                    <Box
+                      sx={{
+                        display: {
+                          xs: 'flex',
+                          sm: 'none',
+                          md: 'none',
+                          lg: 'none',
+                        },
+                      }}
+                    >
+                      <Typography variant='subtitle1'>Login</Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: {
+                          xs: 'none',
+                          sm: 'flex',
+                          md: 'flex',
+                          lg: 'flex',
+                        },
+                      }}
+                    >
+                      <Typography variant='h5' sx={{ fontWeight: 500 }}>
+                        Login
+                      </Typography>
+                    </Box>
                   </Button>
                   <Button
-                    sx={{ mx: 2, my: 2 }}
+                    sx={{
+                      mx: 2,
+                      my: 2,
+                      display: {
+                        xs: 'none',
+                        sm: 'none',
+                        md: 'none',
+                        lg: 'flex',
+                      },
+                    }}
                     color='inherit'
                     component={Link}
                     to='/signup'
@@ -205,7 +368,7 @@ export function Header() {
                       Signup
                     </Typography>
                   </Button>
-                </>
+                </Box>
               )}
             </Box>
           )}

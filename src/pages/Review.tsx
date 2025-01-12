@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useFetchComments } from '../hooks/useFetchComments';
 import { Layout } from '../components/layout/Layout';
 import { PostContent } from '../components/cards/PostContentCard';
-import { Box, Button, Grid2, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { CommentCard } from '../components/cards/CommentCard';
 import { createCommentService } from '../services/createCommentService';
 import { Comment, CommentReq } from '../interfaces/comment';
@@ -208,9 +208,17 @@ export default function ReviewPage() {
 
   return (
     <Layout>
-      <Box display='flex' sx={{ pb: 4 }}>
+      <Box
+        display='flex'
+        sx={{
+          pb: 4,
+          flexDirection: { xs: 'column', sm: 'column', md: 'row', lg: 'row' },
+          gap: 2,
+          mb: 4,
+        }}
+      >
         {post && (
-          <Box sx={{ flex: 3 }}>
+          <Box sx={{ flex: { xs: 1, sm: 1, md: 3, lg: 3 } }}>
             <PostContent
               post={post}
               onEdit={handleEditPost}
@@ -220,7 +228,7 @@ export default function ReviewPage() {
           </Box>
         )}
         {shop && post && (
-          <Box sx={{ flex: 1, ml: 1 }} minHeight='550px' maxHeight='600px'>
+          <Box sx={{ flex: 1 }} height='600'>
             <ShopCard
               shop={shop}
               reviewWriterID={post.user_id}
@@ -251,7 +259,7 @@ export default function ReviewPage() {
         }}
       />
       {focusNewComment && (
-        <Grid2 container justifyContent='flex-end' sx={{ mb: 2 }}>
+        <Box display='flex' justifyContent='flex-end' sx={{ mb: 2 }}>
           <Button
             variant='outlined'
             onClick={() => {
@@ -265,7 +273,7 @@ export default function ReviewPage() {
           <Button variant='contained' onClick={handleAddNewComment}>
             Comment
           </Button>
-        </Grid2>
+        </Box>
       )}
 
       {comments.length > 0 ? (

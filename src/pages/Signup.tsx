@@ -1,7 +1,7 @@
 import { Alert, List, ListItem, ListItemText, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../features/store';
+import { AppDispatch, RootState } from '../features/store';
 import { signup } from '../features/slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserForm } from '../components/forms/UserForm';
@@ -19,7 +19,22 @@ export default function SignupPage() {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const { error: authError } = useSelector((state: any) => state.auth);
+  const {
+    error: authError,
+    isAuthenticated,
+    status: authStatus,
+  } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    console.log('hi');
+    if (isAuthenticated && authStatus === 'succeeded') {
+      if (prevPage === '/login' || prevPage === '/signup') {
+        navigate('/');
+      }
+      navigate(prevPage);
+    }
+  }, [isAuthenticated, authStatus]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUsernameFieldError(false);

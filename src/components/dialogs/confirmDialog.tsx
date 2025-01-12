@@ -1,5 +1,4 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
-import React from 'react';
 
 interface ConfirmDialogProps {
   open: boolean;

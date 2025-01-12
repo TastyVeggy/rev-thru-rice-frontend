@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react';
 import { MapSearch } from '../map/MapSearch';
 
 interface MapSearchDialogProps {

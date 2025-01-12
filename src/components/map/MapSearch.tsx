@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -8,7 +8,6 @@ import {
   useMap,
 } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet-control-geocoder';
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../features/store';
@@ -34,7 +33,7 @@ export const MapSearch: React.FC<MapSearchProps> = ({ onSubmit }) => {
   const [address, setAddress] = useState<string>('');
   const [country, setCountry] = useState<string>('');
   const [allowedCountries, setAllowedCountries] = useState<string[]>([]);
-  const geocoderAddedRef = useRef(false); // Track if geocoder is added
+  const geocoderAddedRef = useRef(false);
 
   useEffect(() => {
     if (countriesStatus === 'idle') {
@@ -76,14 +75,17 @@ export const MapSearch: React.FC<MapSearchProps> = ({ onSubmit }) => {
 
     useEffect(() => {
       if (map && !geocoderAddedRef.current) {
-        const geocoder = L.Control.Geocoder.nominatim();
+        // const geocoder = L.Control.Geocoder.nominatim();
 
         // Create the geocoder control and add it to the map
-        L.Control.geocoder({
-          geocoder,
-          collapsed: false,
-          position: 'topleft',
-        }).addTo(map);
+        //hacky workaround because geocoder does not support typescript
+        (L.Control as any)
+          .geocoder({
+            // geocoder,
+            collapsed: false,
+            position: 'topleft',
+          })
+          .addTo(map);
 
         // Mark that the geocoder has been added
         geocoderAddedRef.current = true;
@@ -116,7 +118,7 @@ export const MapSearch: React.FC<MapSearchProps> = ({ onSubmit }) => {
         brElements.forEach((br) => {
           const span = document.createElement('span');
           span.textContent = ', '; // Replace <br> with your custom separator (comma, hyphen, etc.)
-          br.parentNode.insertBefore(span, br); // Insert the new element before the <br> tag
+          br.parentNode?.insertBefore(span, br); // Insert the new element before the <br> tag
           br.remove(); // Remove the <br> tag
         });
       });
@@ -164,7 +166,7 @@ export const MapSearch: React.FC<MapSearchProps> = ({ onSubmit }) => {
     <div>
       <MapContainer
         id='map'
-        style={{ height: '500px', width: '100%' }}
+        className='dynamic-map'
         center={[5.0, 105.0]}
         zoom={4}
         zoomControl={false}

@@ -1,7 +1,7 @@
 import { Alert, TextField } from '@mui/material';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../features/store';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../features/store';
 import { login } from '../features/slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserForm } from '../components/forms/UserForm';
@@ -15,6 +15,16 @@ export default function LoginPage() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (prevPage === '/login' || prevPage === '/signup') {
+        navigate('/');
+      }
+      navigate(prevPage);
+    }
+  }, [isAuthenticated]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await dispatch(login({ username, password }));
@@ -22,10 +32,9 @@ export default function LoginPage() {
       setAuthError('Invalid username or password');
       setUsername('');
       setPassword('');
-    } else {
-      navigate(prevPage);
     }
   };
+
   return (
     <Layout withBackground>
       <UserForm
