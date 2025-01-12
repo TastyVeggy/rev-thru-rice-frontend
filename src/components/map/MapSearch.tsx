@@ -12,6 +12,7 @@ import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../features/store';
 import { fetchCountries } from '../../features/slices/countriesSlice';
+import 'leaflet-control-geocoder';
 
 interface MapSearchProps {
   allowedCountries?: string[];
@@ -79,35 +80,38 @@ export const MapSearch: React.FC<MapSearchProps> = ({ onSubmit }) => {
 
         // Create the geocoder control and add it to the map
         //hacky workaround because geocoder does not support typescript
+        // const geocoder = (L.Control as any).Geocoder.nominatim();
         (L.Control as any)
           .geocoder({
-            // geocoder,
+            defaultMarkGeocode: false,
             collapsed: false,
             position: 'topleft',
           })
+          .on('markgeocode', function (e: any) {
+            const { lat, lng } = e.geocode.center;
+
+            setPosition([lat, lng]);
+
+            fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+            )
+              .then((res) => res.json())
+              .then((data) => {
+                setAddress(data.display_name || 'Address not found');
+                setCountry(data.address.country || 'Country not found');
+              })
+              .catch((error) => {
+                console.error('Error fetching address:', error);
+              });
+
+            map.panTo([lat, lng]);
+            setTimeout(() => {
+              map.setZoom(12);
+            }, 300);
+          })
           .addTo(map);
 
-        // Mark that the geocoder has been added
         geocoderAddedRef.current = true;
-
-        // Attach an event listener to capture the geosearch/showlocation event
-        map.on('geosearch/showlocation', function (e: any) {
-          const latlng = e.latlng;
-          setPosition([latlng.lat, latlng.lng]);
-
-          // Reverse geocode to get address
-          fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              setAddress(data.display_name || 'Address not found');
-              setCountry(data.address.country || 'Country not found');
-            })
-            .catch((error) => {
-              console.error('Error fetching address:', error);
-            });
-        });
       }
 
       // Use MutationObserver to watch for changes in geocoder results

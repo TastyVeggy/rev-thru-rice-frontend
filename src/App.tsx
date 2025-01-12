@@ -5,6 +5,7 @@ import { useEffect, Suspense, lazy } from 'react';
 import { checkAuth } from './features/slices/authSlice';
 import { AppDispatch } from './features/store';
 import './components/map/geocode.css';
+import { LoadingPage } from './pages/Loading';
 
 const HomePage = lazy(() => import('./pages/Home'));
 const LoginPage = lazy(() => import('./pages/Login'));
@@ -23,8 +24,9 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingPage />}>
       <Routes>
+        <Route path='/loading' element={<LoadingPage />} />
         <Route path='' element={<HomePage />} />
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />

@@ -59,10 +59,8 @@ export const MapSearchDialog: React.FC<MapSearchDialogProps> = ({
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Typography color='#FF0000' sx={{ mb: 2 }}>
-          Note: Even though using the search function will add a marker, you
-          yourself will have to click a point on the map before submitting
-          location
+        <Typography sx={{ mb: 2 }}>
+          You can search for the location or click the location on the map
         </Typography>
         <MapSearch onSubmit={onSubmit} />
       </DialogContent>
