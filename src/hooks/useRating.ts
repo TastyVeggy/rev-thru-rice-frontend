@@ -97,8 +97,6 @@ export function useRating({
               setRating(data.rating);
             }
           } else if (rating) {
-            console.log(rating);
-            console.log(debouncedRatingScore);
             const res = await fetch(
               `${config.apiUrl}/protected/shops/${shop.id}/ratings`,
               {

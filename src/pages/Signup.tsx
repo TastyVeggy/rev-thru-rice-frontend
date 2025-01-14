@@ -26,7 +26,6 @@ export default function SignupPage() {
   } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    console.log('hi');
     if (isAuthenticated && authStatus === 'succeeded') {
       if (prevPage === '/login' || prevPage === '/signup') {
         navigate('/');

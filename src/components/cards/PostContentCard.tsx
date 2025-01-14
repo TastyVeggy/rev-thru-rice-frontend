@@ -70,7 +70,7 @@ export const PostContent: React.FC<PostContentProps> = ({
     setPostCountries(
       countries.filter((country) => post.countries.includes(country.name))
     );
-  }, [post, countriesStatus]);
+  }, [post, countries]);
 
   const handleConfirmEdit = () => {
     onEdit(editablePost);

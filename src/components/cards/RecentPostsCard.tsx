@@ -9,12 +9,26 @@ import {
 } from '@mui/material';
 import { timeAgo } from '../../utils/time';
 import { Post } from '../../interfaces/post';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../features/store';
+import { useEffect } from 'react';
+import { fetchSubforums } from '../../features/slices/subforumsSlice';
 
 interface RecentPostsProps {
   posts: Post[];
 }
 
 export const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { items: subforums, status: subforumsStatus } = useSelector(
+    (state: RootState) => state.subforums
+  );
+
+  useEffect(() => {
+    if (subforumsStatus === 'idle') {
+      dispatch(fetchSubforums());
+    }
+  }, [dispatch, subforumsStatus]);
   return (
     <Card
       sx={{
@@ -48,7 +62,13 @@ export const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
                       textDecoration: 'none',
                       '&:hover': { color: 'secondary.main' },
                     }}
-                    href={`/post/${post.id}`}
+                    href={
+                      subforums.find(
+                        (subforum) => subforum.id === post.subforum_id
+                      )?.category === 'Generic'
+                        ? `/post/${post.id}`
+                        : `/review/${post.id}`
+                    }
                   >
                     {post.title}
                   </Typography>
