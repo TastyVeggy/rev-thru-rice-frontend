@@ -121,7 +121,7 @@ export default function SubforumPage() {
       {postCount !== 0 && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Pagination
-            count={Math.ceil(postCount / postsPerPage) - 1}
+            count={Math.ceil(postCount / postsPerPage)}
             page={page}
             onChange={handleChangePage}
             color='primary'
